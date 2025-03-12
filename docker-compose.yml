@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  sql_proxy:
+    container_name: sql_proxy
+    build: .
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./app.py:/app/app.py
