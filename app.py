@@ -5,7 +5,7 @@ import os
 import re
 from dotenv import load_dotenv
 import logging
-from datetime import timedelta, datetime
+from datetime import timedelta, datetime, date
 import json
 
 # 加载环境变量
@@ -14,7 +14,7 @@ load_dotenv()
 # 创建一个自定义的JSON编码器来处理datetime和timedelta
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, datetime):
+        if isinstance(obj, (datetime, date)):
             return obj.strftime('%Y-%m-%d %H:%M:%S')
         if isinstance(obj, timedelta):
             total_seconds = int(obj.total_seconds())
@@ -118,7 +118,7 @@ def execute_query():
         # 如果是SELECT查询，获取结果
         if sql.strip().lower().startswith('select'):
             result = cursor.fetchall()
-            response = {"data": result, "rowCount": len(result)}
+            response = result  # 直接返回结果数据，不包含rowCount
         else:
             # 对于非SELECT查询，提交更改并返回影响的行数
             conn.commit()
